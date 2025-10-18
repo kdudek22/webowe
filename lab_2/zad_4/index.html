@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zagnieżdżone Elementy</title>
+    <style>
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            height: 400px;
+        }
+        
+        .blue {
+            width: 350px;
+            height: 350px;
+            background-color: #3366ff;
+        }
+        
+        .red {
+            width: 250px;
+            height: 250px;
+            background-color: #ff3333;
+        }
+        
+        .yellow {
+            width: 150px;
+            height: 150px;
+            background-color: #ffcc00;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="blue" id="blue">
+           <p>1</p>
+            <div class="red" id="red">
+                <p>2</p>
+                <div class="yellow" id="yellow">
+                    <p>3</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="message-section" id="messageSection">
+        <p>Kliknij na kolorowy element, aby zobaczyć komunikat.</p>
+    </div>
+    
+    <div class="stats">
+        <p>Suma punktów: <span id="totalPoints">0</span></p>
+    </div>
+    
+    <div class="controls">
+        <button id="propagationBtn">StopPropagation</button>
+        <button id="resetBtn">Reset</button>
+        <button id="orderBtn">Order</button>
+    </div>
+    
+    <div class="info">
+        <p>Elementy są zagnieżdżone: niebieski → czerwony → żółty</p>
+        <p>Kliknięcie na wewnętrzny element powoduje również kliknięcie na elementy nadrzędne (propagacja)</p>
+    </div>
+
+    <script>
+        // Zmienne globalne
+        let totalPoints = 0;
+        let stopPropagation = false;
+        let eventOrder = ['yellow', 'red', 'blue']; // Domyślna kolejność
+        let yellowEnabled = true;
+        let redEnabled = true;
+        let blueEnabled = true;
+
+        // Elementy DOM
+        const yellowElement = document.getElementById('yellow');
+        const redElement = document.getElementById('red');
+        const blueElement = document.getElementById('blue');
+        const messageSection = document.getElementById('messageSection');
+        const totalPointsElement = document.getElementById('totalPoints');
+        const propagationBtn = document.getElementById('propagationBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const orderBtn = document.getElementById('orderBtn');
+
+        // Funkcje obsługi zdarzeń
+        function handleYellowClick(event) {
+            if (!yellowEnabled){
+                event.stopPropagation()
+                return
+            }
+            
+            if (stopPropagation) {
+                event.stopPropagation();
+            }
+            
+            totalPoints += 5;
+            updatePoints();
+            displayMessage("Nacisnąłeś żółty o wartości 5");
+            checkPoints();
+        }
+
+        function handleRedClick(event) {
+            if (!redEnabled){
+                event.stopPropagation()
+                return
+            };
+            
+            if (stopPropagation) {
+                event.stopPropagation();
+            }
+            
+            totalPoints += 2;
+            updatePoints();
+            displayMessage("Nacisnąłeś czerwony o wartości 2");
+            checkPoints();
+        }
+
+        function handleBlueClick(event) {
+            if (!blueEnabled) return;
+            
+            if (stopPropagation) {
+                event.stopPropagation();
+            }
+            
+            totalPoints += 1;
+            updatePoints();
+            displayMessage("Nacisnąłeś niebieski o wartości 1");
+            checkPoints();
+        }
+
+        // Funkcje pomocnicze
+        function displayMessage(message) {
+            messageSection.innerHTML = `<p>${message}</p>`;
+        }
+
+        function updatePoints() {
+            totalPointsElement.textContent = totalPoints;
+        }
+
+        function checkPoints() {
+            if (totalPoints >= 30) {
+                redEnabled = false;
+                displayMessage("Suma przekroczyła 30");
+            }
+            
+            if (totalPoints >= 50) {
+                yellowEnabled = false;
+                displayMessage("Suma przekroczyła 50");
+            }
+        }
+
+        function reset() {
+            totalPoints = 0;
+            updatePoints();
+            yellowEnabled = true;
+            redEnabled = true;
+            blueEnabled = true;
+            displayMessage("Stan zresetowany. Kliknij na kolorowy element, aby zobaczyć komunikat.");
+        }
+
+        function togglePropagation() {
+            stopPropagation = !stopPropagation;
+            propagationBtn.textContent = stopPropagation ? "StartPropagation" : "StopPropagation";
+            
+            if (stopPropagation) {
+                displayMessage("Propagacja zdarzeń została zatrzymana. Kliknięcia nie będą przekazywane do elementów nadrzędnych.");
+            } else {
+                displayMessage("Propagacja zdarzeń została włączona. Kliknięcia będą przekazywane do elementów nadrzędnych.");
+            }
+        }
+
+        function changeOrder() {
+            // Rotacja kolejności - przesuwamy pierwszy element na koniec
+            eventOrder.push(eventOrder.shift());
+            
+            // Usuwamy wszystkie nasłuchiwacze
+            yellowElement.removeEventListener('click', handleYellowClick);
+            redElement.removeEventListener('click', handleRedClick);
+            blueElement.removeEventListener('click', handleBlueClick);
+            
+            // Dodajemy nasłuchiwacze w nowej kolejności
+            eventOrder.forEach(color => {
+                switch(color) {
+                    case 'yellow':
+                        yellowElement.addEventListener('click', handleYellowClick);
+                        break;
+                    case 'red':
+                        redElement.addEventListener('click', handleRedClick);
+                        break;
+                    case 'blue':
+                        blueElement.addEventListener('click', handleBlueClick);
+                        break;
+                }
+            });
+            
+            displayMessage(`Kolejność zmieniona. Aktualna kolejność: ${eventOrder.join(' → ')}`);
+        }
+
+        // Inicjalizacja nasłuchiwaczy zdarzeń
+        eventOrder.forEach(color => {
+            switch(color) {
+                case 'yellow':
+                    yellowElement.addEventListener('click', handleYellowClick);
+                    break;
+                case 'red':
+                    redElement.addEventListener('click', handleRedClick);
+                    break;
+                case 'blue':
+                    blueElement.addEventListener('click', handleBlueClick);
+                    break;
+            }
+        });
+
+        propagationBtn.addEventListener('click', togglePropagation);
+        resetBtn.addEventListener('click', reset);
+        orderBtn.addEventListener('click', changeOrder);
+    </script>
+</body>
+</html>
