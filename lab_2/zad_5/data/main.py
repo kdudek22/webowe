@@ -14,7 +14,7 @@ app.add_middleware(
 
 @app.get("/categories", response_model=List[str])
 async def get_categories():
-    return ["samochody", "slodycze", "rowery"]
+    return ["samochody", "slodycze", "rowery", "psy"]
 
 
 @app.get("/items", response_model=list[dict[str, Any]])
@@ -24,7 +24,6 @@ async def get_categories():
         {"slodycze": ["Lukrecja", "Zozole"]},
         {"rowery": ["Romet", "Kross"]}
     ]
-
 
 
 if __name__ == "__main__":
