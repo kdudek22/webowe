@@ -1,49 +1,166 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unsplash Image Search</title>
-    <style>
-        img {
-            width: 200px;
-            height: 200px;
-            object-fit: cover;
-            margin: 10px;
-        }
-    </style>
-</head>
-<body>
-    <input type="text" id="input">
-    <div id="images"></div>
-</body>
-<script>
-    const input = document.getElementById("input");
-    const imagesDiv = document.getElementById("images");
-
-    const fetch_images = async (query) => {
-        if (!query) {
-            imagesDiv.innerHTML = "";
-            return;
-        }
-
-        const accessKey = "kT32GGUHSl-OVikf6GJl2ucuYJCr9pVU71PQsBJRTWE";
-        const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=10&client_id=${accessKey}`;
-
-        const response = await fetch(url);
-        const data = await response.json();
-
-        imagesDiv.innerHTML = "";
-
-        data.results.forEach(image => {
-            const img = document.createElement("img");
-            img.src = image.urls.small;
-            imagesDiv.appendChild(img);
-        });
+  <meta charset="UTF-8" />
+  <meta name="viewport"/>
+  <title>Slider Wizytówek</title>
+  <style>
+    .slider {
+      background-color: rgb(219, 232, 255);
+      font-family: "Poppins", sans-serif;
+      padding: 1rem 4rem;
+      position: relative;
+      height: 600px; /* fixed height so cards overlap nicely */
+      overflow: hidden;
+      width: 400px;
     }
 
-    input.addEventListener("input", () => {
-        fetch_images(input.value);
+    .card {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-direction: column;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.98);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      text-align: center;
+    }
+
+    .card.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    img {
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .name {
+      color: rgb(159, 159, 250);
+      font-size: 2rem;
+    }
+
+    .role, .description {
+      color: gray;
+    }
+
+    .arrow {
+      border: solid black;
+      border-width: 0 3px 3px 0;
+      display: inline-block;
+      padding: 3px;
+    }
+
+    .right {
+      transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+    }
+
+    .left {
+      transform: rotate(135deg);
+      -webkit-transform: rotate(135deg);
+    }
+
+    .arrow-button {
+      background-color: white;
+      border-radius: 5px;
+      display: flex;
+      justify-content: center;
+      width: fit-content;
+      padding: 1rem;
+      cursor: pointer;
+    }
+
+    .button-left {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .button-right {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  </style>
+</head>
+<body>
+  <div style="display:flex; justify-content: center;">
+    <div style="display: flex; justify-content: center; flex-direction: column;">
+      <div class="slider">
+        <div style="display: flex; justify-content: center; font-weight:bolder; margin-bottom: 1rem; font-size: 2rem;" id="random">
+          <p style="color: blue">/</p>
+          <p>Nasi Pracownicy</p>
+        </div>
+
+        <div class="card active">
+          <img src="https://randomuser.me/api/portraits/women/44.jpg">
+          <p class="name">ADAM NOWAK</p>
+          <p class="role">Senior Vibe Code engineer</p>
+          <p class="description">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Impedit, tempora.</p>
+        </div>
+
+        <div class="card">
+          <img src="https://randomuser.me/api/portraits/men/58.jpg">
+          <p class="name">JULIA NOWAK</p>
+          <p class="role">Junior Code engineer</p>
+          <p class="description">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Impedit, tempora.</p>
+        </div>
+
+        <div class="card">
+          <img src="https://randomuser.me/api/portraits/men/32.jpg">
+          <p class="name">ADAM KULA</p>
+          <p class="role">Senior Researcher</p>
+          <p class="description">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Impedit, tempora.</p>
+        </div>
+        <div class="buttons">
+          <span class="arrow-button button-left" id="prev">
+            <i class="arrow left"></i>
+          </span>
+          <span class="arrow-button button-right" id="next">
+            <i class="arrow right"></i>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cards = document.querySelectorAll(".card");
+    const nextButton = document.getElementById("next");
+    const prevButton = document.getElementById("prev");
+    const random = document.getElementById("random")
+
+    let current = 0;
+
+    const showCard = (index) => {
+      cards.forEach(card => card.classList.remove("active"));
+      cards[index].classList.add("active");
+    };
+
+    prevButton.addEventListener("click", () => {
+      current = (current - 1 + cards.length) % cards.length;
+      showCard(current);
     });
-</script>
+
+    nextButton.addEventListener("click", () => {
+      current = (current + 1) % cards.length;
+      showCard(current);
+    });
+
+    random.addEventListener("click", () => {
+      current = Math.floor(Math.random() * cards.length);
+      showCard(current)
+    })
+  </script>
+</body>
 </html>
