@@ -18,3 +18,7 @@
 .hidden{
     display: none;
 }
+
+.item{
+  margin-left: 30px
+}

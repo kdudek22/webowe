@@ -162,19 +162,7 @@ const get_items_for_category = (items, category) => {
     return []
 }
 
-
 fetch_data()
-
-
-const create_categories = (categories) => {
-    for(let category of categories){
-        checkbox = create_checkbox(category)
-        label = create_checkbox_label(category)
-
-        list.appendChild(checkbox)
-        list.appendChild(label)
-    }
-}
 
 const create_checkbox = (value) => {
     const checkbox = document.createElement('input');
