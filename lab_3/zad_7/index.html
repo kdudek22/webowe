@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tocząca się kulka z przyciskami Start/Stop</title>
+</head>
+<body>
+  <canvas id="canvas" width="800" height="400" style="border: 1px solid black"></canvas>
+  <br />
+  <button id="start">Start</button>
+  <button id="stop">Stop</button>
+
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+
+    document.getElementById("stop").addEventListener("click", () => {isPaused = true;});
+    document.getElementById("start").addEventListener("click", () => {isPaused = false;});
+
+    let isPaused = false;
+
+    const ball = {
+      x: 100,
+      y: 200,
+      r: 30,
+      color: "#3498db",
+      speed: 2,
+      angle: 0,
+    };
+
+    function drawBall() {
+      ctx.save();
+      ctx.translate(ball.x, ball.y);
+
+      ctx.beginPath();
+      ctx.arc(0, 0, ball.r, 0, Math.PI * 2);
+      ctx.fillStyle = ball.color;
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    function update() {
+      ball.x += ball.speed;
+      ball.angle += ball.speed / ball.r;
+
+      ball.r = 30 + Math.sin(ball.x/ 100) * 10
+      ball.color = `hsl(${(ball.x  + ball.y * 100) % 360}, 80%, 50%)`;
+
+      if (ball.x > canvas.width - ball.r || ball.x < ball.r) {
+        ball.speed *= -1;
+      }
+    }
+
+    function animate() {
+      if (!isPaused) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        update();
+        drawBall();
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
