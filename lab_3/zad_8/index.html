@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Animacja Gwiazdek</title>
+<style>
+  canvas {
+    border: 1px solid white;
+    background-color: black;
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <p>Ilosc</p>
+  <input type="range" id="ilosc" min="10" max="500" value="100">
+  <p>predkosc</p>
+  <input type="range" id="predkosc" min="0.1" max="5" step="0.1" value="1">
+</div>
+
+<canvas id="canvas" width="400" height="400"></canvas>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+let stars = [];
+let starCount = 100;
+let speed = 1;
+
+const starCountSlider = document.getElementById('ilosc');
+const speedSlider = document.getElementById('predkosc');
+
+function createStars(count) {
+  stars = [];
+  for (let i = 0; i < count; i++) {
+    stars.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      size: Math.random() * 2 + 1,
+      dx: (Math.random() - 0.5) * speed,
+      dy: (Math.random() - 0.5) * speed
+    });
+  }
+}
+
+function updateStars() {
+  for (let star of stars) {
+    star.x += star.dx;
+    star.y += star.dy;
+
+    if (star.x < 0 || star.x > canvas.width) star.dx *= -1;
+    if (star.y < 0 || star.y > canvas.height) star.dy *= -1;
+  }
+}
+
+function drawStars() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = 'yellow';
+  for (let star of stars) {
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function animate() {
+  updateStars();
+  drawStars();
+  requestAnimationFrame(animate);
+}
+
+starCountSlider.addEventListener('input', () => {
+  starCount = parseInt(starCountSlider.value);
+  createStars(starCount);
+});
+
+speedSlider.addEventListener('input', () => {
+  speed = parseFloat(speedSlider.value);
+  for (let star of stars) {
+    star.dx = (Math.random() - 0.5) * speed;
+    star.dy = (Math.random() - 0.5) * speed;
+  }
+});
+
+createStars(starCount);
+animate();
+</script>
+
+</body>
+</html>
