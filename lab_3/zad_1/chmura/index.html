@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cloud with 5 Circles</title>
+</head>
+<body>
+  <canvas id="cloudCanvas" width="500" height="300" style="border:1px solid #000;"></canvas>
+
+  <script>
+    const canvas = document.getElementById('cloudCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function drawCloud(x, y, scale = 1) {
+      ctx.fillStyle = 'white';
+      ctx.strokeStyle = '#ccc';
+      ctx.lineWidth = 2;
+
+      // Draw 5 circles to form a cloud
+      const circles = [
+        {cx: x, cy: y, r: 20 * scale},
+        {cx: x + 25 * scale, cy: y - 15 * scale, r: 25 * scale},
+        {cx: x + 55 * scale, cy: y - 5 * scale, r: 20 * scale},
+        {cx: x + 35 * scale, cy: y + 15 * scale, r: 20 * scale},
+        {cx: x + 60 * scale, cy: y + 15 * scale, r: 15 * scale},
+      ];
+
+      circles.forEach(c => {
+        ctx.beginPath();
+        ctx.arc(c.cx, c.cy, c.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      });
+    }
+
+    // Draw clouds
+    drawCloud(100, 100);
+    drawCloud(300, 150, 1.2);
+  </script>
+</body>
+</html>

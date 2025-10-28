@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<style>
+  canvas {
+    border: 1px solid black;
+    display: block;
+    margin: 20px auto;
+  }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="300" height="300" style="border: 1px solid black;"></canvas>
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+const numRows = 5;
+const numCols = 5;
+const cellSize = 60;
+const colors = ['red', 'green', 'blue'];
+
+let grid = [];
+let selected = null;
+
+const initGrid = () => {
+    for(let r=0; r< numRows; r ++){
+        grid[r] = []
+        for(let c=0; c < numCols; c ++){
+            grid[r][c] = colors[Math.floor(Math.random() * colors.length)];
+        }
+    }
+}
+
+function drawGrid() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let r = 0; r < numRows; r++) {
+        for (let c = 0; c < numCols; c++) {
+            ctx.beginPath();
+            ctx.arc(c * cellSize + cellSize/2, r * cellSize + cellSize/2, cellSize/2 - 5, 0, Math.PI*2);
+            ctx.fillStyle = grid[r][c];
+            ctx.fill();
+            ctx.strokeStyle = 'black';
+            ctx.stroke();
+
+            if (selected && selected.r === r && selected.c === c) {
+                ctx.lineWidth = 5;
+                ctx.strokeStyle = 'orange';
+                ctx.stroke();
+                ctx.lineWidth = 1;
+            }
+        }
+    }
+}
+
+canvas.addEventListener('click', (e) => {
+    const rect = canvas.getBoundingClientRect();
+
+    const c = Math.floor((e.clientX - rect.left) / cellSize)
+    const r = Math.floor((e.clientY - rect.top) / cellSize)
+
+    if (!selected) {
+        selected = {r, c};
+    } else {
+        swap(selected, {r, c});
+        selected = null;
+        checkMatches();
+    }
+    drawGrid();
+});
+
+function swap(a, b) {
+    const temp = grid[a.r][a.c];
+    grid[a.r][a.c] = grid[b.r][b.c];
+    grid[b.r][b.c] = temp;
+}
+
+function checkMatches() {
+    for (let r = 0; r < numRows; r++) {
+        for (let c = 0; c < numCols - 2; c++) {
+            if (grid[r][c] === grid[r][c+1] && grid[r][c] === grid[r][c+2]) {
+                grid[r][c] = grid[r][c+1] = grid[r][c+2] = colors[Math.floor(Math.random() * colors.length)];
+            }
+        }
+    }
+    for (let c = 0; c < numCols; c++) {
+        for (let r = 0; r < numRows - 2; r++) {
+            if (grid[r][c] === grid[r+1][c] && grid[r][c] === grid[r+2][c]) {
+                grid[r][c] = grid[r+1][c] = grid[r+2][c] = colors[Math.floor(Math.random() * colors.length)];
+            }
+        }
+    }
+}
+
+initGrid();
+drawGrid();
+</script>
+</body>
+</html>

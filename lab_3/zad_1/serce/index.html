@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <canvas style="border: 1px solid black" width="300" height="300" id="canvas"></canvas>
+</body>
+<script>
+
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+
+function drawPoint(x, y, size = 2, color = "black") {
+    ctx.fillStyle = color;
+    ctx.fillRect(x - size/2, y - size/2, size, size);
+}
+
+ctx.beginPath();
+ctx.moveTo(canvas.width/2,canvas.height/2 + 100);
+
+let point_1 = {x: 120, y: 240}
+let point_2 = {x: 40, y: 200}
+
+ctx.bezierCurveTo(point_1.x,point_1.y,point_2.x,point_2.y,40,120);
+
+point_1 = {x: 50, y: 20}
+point_2 = {x: 120, y: 20}
+ctx.bezierCurveTo(point_1.x,point_1.y,point_2.x,point_2.y, canvas.width/2, 100)
+
+// Other side
+ctx.moveTo(canvas.width/2,canvas.height/2 + 100);
+
+point_1 = {x: canvas.width - 120, y: 240}
+point_2 = {x: canvas.width - 40, y: 200}
+
+ctx.bezierCurveTo(point_1.x,point_1.y,point_2.x,point_2.y,canvas.width -40,120);
+
+point_1 = {x: canvas.width - 50, y: 20}
+point_2 = {x: canvas.width - 120, y: 20}
+ctx.bezierCurveTo(point_1.x,point_1.y,point_2.x,point_2.y,canvas.width - canvas.width/2, 100)
+
+
+ctx.lineWidth = 3
+ctx.strokeStyle = "black"
+ctx.stroke()
+ctx.fill()
+
+
+canvas.addEventListener('click', function(event) {
+    const rect = canvas.getBoundingClientRect();
+
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    console.log('Clicked coordinates: ', x, y);
+});
+
+
+</script>
+</html>
