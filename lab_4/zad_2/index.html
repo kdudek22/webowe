@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .image-container{
+        height: 25vh;
+        display: flex;
+        justify-content: center;
+        padding: 50px;
+    }
+</style>
+<body>
+    <p>Threshold</p>
+    <input type="range" id="slider" min="0" max="1" step="0.05" value="0.1" />
+    <div class="images">
+        <div class="image-container">
+            <img alt="not-loaded">
+        </div>
+        <div class="image-container">
+            <img alt="not-loaded">
+        </div>
+        <div class="image-container">
+            <img alt="not-loaded">
+        </div>
+        <div class="image-container">
+            <img alt="not-loaded">
+        </div>
+        <div class="image-container">
+            <img alt="not-loaded">
+        </div>
+        <div class="image-container">
+            <img alt="not-loaded">
+        </div>
+        <div class="image-container">
+            <img alt="not-loaded">
+        </div>
+        <div class="image-container">
+            <img alt="not-loaded">
+        </div>
+    </div>
+<script>
+
+const images = document.querySelectorAll("img")
+const slider = document.getElementById("slider");
+
+let observer;
+
+function createObserver(threshold) {
+    if (observer) {
+        observer.disconnect();
+    }
+
+    observer = new IntersectionObserver(
+        (entries) => {
+            entries.forEach((entry) => {
+                const image = entry.target;
+                if (entry.isIntersecting) {
+                    image.src = "https://fastly.picsum.photos/id/161/600/400.jpg?hmac=LYQLtMnDDy2fJ3KJW8Nm4Fcjh_HAex5_6c5cnhzCs4E";
+                } else {
+                    image.removeAttribute("src");
+                }
+            });
+        },
+        { threshold: threshold }
+    );
+
+    images.forEach((image) => observer.observe(image));
+}
+
+createObserver(parseFloat(slider.value));
+
+slider.addEventListener("input", () => {
+    const newThreshold = parseFloat(slider.value);
+    createObserver(newThreshold);
+});
+
+</script>
+</body>
+</html>
