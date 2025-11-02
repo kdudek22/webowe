@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .image-container{
+        height: 45vh;
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+    }
+    img{
+        height: 400px;
+    }
+</style>
+<body>
+    <div id="container">
+    </div>
+</body>
+<script>
+    const container = document.getElementById("container")
+    let lastImage = null
+    let observer = null
+
+    const images = Array.from({ length: 10 }, (_, i) => `https://picsum.photos/id/${i + 1}/400/300`);
+    const text = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Illum, ab!"
+
+    const addImage = () => {
+        const div = document.createElement("div")
+        div.classList.add("image-container")
+        div.innerHTML = `<div><img src=${images[Math.floor(Math.random() * images.length)]}><h3>${text}</h3></div>`
+
+        container.appendChild(div)
+    }
+
+    addImage()
+    addImage()
+    addImage()
+    addImage()
+    addImage()
+    
+    addObserverToLastImage = () => {
+        const allImages = Array.from(document.getElementsByTagName("img"));
+
+        if(observer){
+            observer.disconnect();
+        }
+
+        observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        addImage()
+                        addObserverToLastImage()
+                    }
+                });
+            },
+            { threshold: 1 }
+        );
+        observer.observe(allImages[allImages.length - 1])
+    }
+
+    addObserverToLastImage()
+</script>
+</html>

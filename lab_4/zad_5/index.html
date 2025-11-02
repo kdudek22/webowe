@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .section-container{
+        display: flex;
+        justify-content: center;
+        height: 50vh;
+        border: 2px solid black;
+    }
+
+    #menu{
+        background-color: orange;
+    }
+</style>
+<body>
+    <div id="menu">
+        <h2>MENU: </h2>
+    </div>
+    <div id="container">
+    </div>
+    
+</body>
+<script>
+    const container = document.getElementById("container")
+    const menu = document.getElementById("menu")
+
+    const maxSections = 5
+
+    let observer = null
+
+    let sections = []
+
+    const doAll = async () => {
+        sections = await fetchSections()
+
+        addSection(0)
+
+        addObserverToLastSection()
+    }
+
+    const addSection = (sectionNumber) => {
+
+
+        const div = document.createElement("div")
+        div.classList.add("section-container")
+        const section = sections[sectionNumber]
+    
+        div.innerHTML = 
+        `<div>
+            <h3>${section.title}</h3>
+            <img src=${section.image}>
+            <p>${section.text}</p>
+        </div>`
+
+        container.appendChild(div)
+
+        const p = document.createElement("p")
+        p.textContent = section.title
+
+        menu.appendChild(p)
+    }
+
+    const fetchSections = async () => {
+        let res = []
+        for(let i=1; i<6; i++){
+            res.push(await fetchSection(i))
+        }
+        return res
+    }
+
+    const fetchSection = async (number) => {
+        const response = await fetch(`sections/${number}.json`)
+
+        return await response.json()
+    }
+
+    const addObserverToLastSection = () => {
+        const allSections = Array.from(document.getElementsByClassName("section-container"));
+
+        if(observer){
+            observer.disconnect();
+        }
+
+        observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting && allSections.length < maxSections) {
+                        addSection(allSections.length)
+                        addObserverToLastSection()
+                    }
+                });
+            },
+            { threshold: 0.5 }
+        );
+        observer.observe(allSections[allSections.length - 1])
+    }
+
+    doAll()
+
+</script>
+</html>
