@@ -28,7 +28,7 @@
     </div>
     <div id="container"></div>
     <div>
-        <h2>Thats all there is</h2>
+        <h2 style="font-size: 5rem">Thats all there is...</h2>
     </div>
     
 </body>
@@ -42,12 +42,10 @@
     let observer = null
 
     const init = async () => {
-        await addSection(0)
-
-        addObserverToLastSection()
+        await addSectionAndObserver(0)
     }
 
-    const addSection = async (sectionNumber) => {
+    const addSectionAndObserver = async (sectionNumber) => {
         const section = await fetchSection(sectionNumber)
 
         sections.push(section)
@@ -64,6 +62,8 @@
 
         container.appendChild(div)
         addTextToMenu(sections.length + ": " + section.title)
+
+        addObserverToLastSection()
     }
 
     const fetchSection = async (number) => {
@@ -90,8 +90,7 @@
             (entries) => {
                 entries.forEach(async (entry) => {
                     if (entry.isIntersecting && allSections.length <= maxSections) {
-                        await addSection(allSections.length)
-                        addObserverToLastSection()
+                        await addSectionAndObserver(allSections.length)
                     }
                 });
             },
