@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drag & Drop TODO</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        .todo {
+            padding: 1rem;
+            background-color: orange;
+            flex: 1;
+            border: 2px solid black;
+        }
+        .done {
+            padding: 1rem;
+            background-color: lightskyblue;
+            flex: 1;
+            border: 2px solid black;
+        }
+        .element {
+            border: 1px solid black;
+            padding: 5px;
+            margin: 5px 0;
+            background-color: white;
+        }
+        .hovering {
+            background-color: chartreuse;
+            color: white;
+        }
+        .container {
+            display: flex;
+            gap: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="done" id="done">
+            <p>DONE:</p>
+        </div>
+        <div>
+            <input type="checkbox" id="copy">
+            Kopiuj
+        </div>
+        <div class="todo" id="todo">
+            <p>TODO:</p>
+            <div>
+                <p draggable="true" class="element">Wyrzucic smieci</p>
+                <p draggable="true" class="element">Zrobic zakupy</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    const todoContainer = document.getElementById("todo");
+    const doneContainer = document.getElementById("done");
+    const copy = document.getElementById("copy")
+
+    let draggedElement = null;
+
+    document.querySelectorAll('.element').forEach(el => {
+        el.addEventListener('dragstart', (e) => {
+            draggedElement = el;
+        });
+    });
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add("hovering");
+    }
+
+    function handleDragLeave(e) {
+        e.currentTarget.classList.remove("hovering");
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        e.currentTarget.classList.remove("hovering");
+        if (draggedElement) {
+            if(copy.checked){
+                const clone = draggedElement.cloneNode(true);
+                clone.addEventListener('dragstart', (ev) => {
+                    draggedElement = clone;
+                });
+                e.currentTarget.appendChild(clone);
+            }
+            else{
+                e.currentTarget.appendChild(draggedElement)
+            }
+            draggedElement = null
+        }
+    }
+
+    [todoContainer, doneContainer].forEach(container => {
+        container.addEventListener("dragover", handleDragOver);
+        container.addEventListener("dragleave", handleDragLeave);
+        container.addEventListener("drop", handleDrop);
+    });
+</script>

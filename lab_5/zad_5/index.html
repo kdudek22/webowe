@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+
+</head>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+    }
+    .card{
+        width: 400px;
+        height: 75px;
+        background: rgb(242, 242, 242);
+        border-radius: 100px;
+        padding: 1rem 2rem;
+        display: flex;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+        justify-content: space-between;
+    }
+    img{
+        border-radius: 50%;
+        height: 75px;
+        margin-right: 1rem;
+    }
+    .card-first-section{
+        display: flex;
+        align-items: center;
+    }
+    .card-second-section{
+        display: flex;
+        align-items: center;
+        gap: 2rem
+    }
+    .dragged{
+        outline: 3px dashed skyblue;
+        opacity: 50%;
+    }
+</style>
+<body>
+    <div id="container" style="display: flex; flex-direction: column; gap: 1rem; align-items: center;">
+        <div class="card" draggable="true">
+            <div class="card-first-section">
+                <img src="https://randomuser.me/api/portraits/men/58.jpg">
+                <div>
+                    <p style="font-weight: bold;">Janek</p>
+                    <p style="color: rgb(117, 117, 117)">Deweloper</p>
+                </div>
+            </div>
+
+            <div class="card-second-section">
+                <i class="fab fa-facebook-f"></i>
+                <i class="fab fa-instagram"></i>
+            </div>
+        </div>
+
+            <div class="card" draggable="true">
+            <div class="card-first-section">
+                <img src="https://randomuser.me/api/portraits/men/8.jpg">
+                <div>
+                    <p style="font-weight: bold;">Kuba</p>
+                    <p style="color: rgb(117, 117, 117)">Super Developer</p>
+                </div>
+            </div>
+
+            <div class="card-second-section">
+                <i class="fab fa-facebook-f"></i>
+                <i class="fab fa-instagram"></i>
+            </div>
+        </div>
+
+            <div class="card" draggable="true">
+            <div class="card-first-section">
+                <img src="https://randomuser.me/api/portraits/women/58.jpg">
+                <div>
+                    <p style="font-weight: bold;">Ania</p>
+                    <p style="color: rgb(117, 117, 117)">HR</p>
+                </div>
+            </div>
+
+            <div class="card-second-section">
+                <i class="fab fa-facebook-f"></i>
+                <i class="fab fa-instagram"></i>
+            </div>
+        </div>
+
+            <div class="card" draggable="true">
+            <div class="card-first-section">
+                <img src="https://randomuser.me/api/portraits/women/8.jpg">
+                <div>
+                    <p style="font-weight: bold;">Magda</p>
+                    <p style="color: rgb(117, 117, 117)">Księgowa</p>
+                </div>
+            </div>
+
+            <div class="card-second-section">
+                <i class="fab fa-facebook-f"></i>
+                <i class="fab fa-instagram"></i>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    const container = document.getElementById("container")
+    let draggedCard = null
+
+    container.addEventListener("dragstart", (e) => {
+        draggedCard = e.target
+        draggedCard.classList.add("dragged")
+    })
+
+    container.addEventListener("dragend", (e) => {
+        draggedCard.classList.remove("dragged")
+        draggedCard = null
+    })
+
+    container.addEventListener("dragover", (e) => {
+        e.preventDefault()
+
+        const cards = Array.from(document.getElementsByClassName("card"))
+
+        let nextCard = cards.find(card => {
+            const rect = card.getBoundingClientRect()
+            const midpoint = rect.top + rect.height / 2
+            return e.clientY < midpoint
+        })
+
+        container.insertBefore(draggedCard, nextCard)
+    })
+</script>
