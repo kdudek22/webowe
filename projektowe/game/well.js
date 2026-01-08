@@ -10,6 +10,13 @@ export function createWell(scene) {
 
     well.position.z = -WELL_DEPTH / 2;
     scene.add(well);
+
+    // create the 3d array that will represent the well
+    return Array.from({ length: WELL_DEPTH }, () =>
+      Array.from({ length: WELL_SIZE }, () =>
+        Array.from({ length: WELL_SIZE }, () => 0)
+      )
+    );
 }
 
 

@@ -5,7 +5,7 @@ import { setupControls } from "./game/controls.js";
 import { animateLoop } from "./game/animation.js";
 
 const { scene, camera, renderer } = createScene();
-createWell(scene);
+const well = createWell(scene);
 
 const state = {
     activePiece: null,
@@ -13,6 +13,7 @@ const state = {
     fallInterval: 500,
     lastFallTime: 0,
     well: {
+        well: well,
         depth: WELL_DEPTH,
         size: WELL_SIZE
     },

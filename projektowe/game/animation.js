@@ -13,6 +13,7 @@ export function animateLoop(state, renderer, scene, camera) {
                 updatePieceColor(piece)
                 state.fixed.push(piece);
                 state.spawn();
+                console.log(state.well.well)
             }
         }
 
