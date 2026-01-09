@@ -4,14 +4,14 @@ export const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
 
 export const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(5, 5, 10);
+camera.position.set(3, 3, -10);
 
 export const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 export const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.target.set(0, 0, -10);
+controls.target.set(3, 3, 10);
 controls.enableDamping = true;
 
 scene.add(new THREE.AmbientLight(0x444444));
@@ -33,33 +33,8 @@ const well = new THREE.LineSegments(
   new THREE.LineBasicMaterial({ color: 0x00ffff })
 );
 
-// Now the well starts at 0,0,0
 scene.add(well);
 
-const CUBE_SIZE = 1; // size of corner cubes
-
-const cornerPositions = [
-  [0, 0, 0], // top-front-left
-  [3, 3, WELL_DEPTH], // top-front-right
-  [0, WELL_HEIGHT, 0], // bottom-front-left
-  [WELL_WIDTH, WELL_HEIGHT, 0] // bottom-front-right
-];
-
-// create corner cubes
-cornerPositions.forEach(pos => {
-  const cubeGeo = new THREE.BoxGeometry(CUBE_SIZE, CUBE_SIZE, CUBE_SIZE);
-  const cubeMat = new THREE.MeshBasicMaterial({ color: 0xff0000 });
-  const cube = new THREE.Mesh(cubeGeo, cubeMat);
-
-  // position the cube (center it on the corner)
-  cube.position.set(
-    pos[0] - CUBE_SIZE / 2,
-    pos[1] - CUBE_SIZE / 2,
-    pos[2] - CUBE_SIZE / 2
-  );
-
-  scene.add(cube);
-});
 
 
 
