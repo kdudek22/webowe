@@ -1,22 +1,16 @@
 export const WELL_SIZE = 6;
-export const WELL_DEPTH = 5;
+export const WELL_DEPTH = 20;
 
-export function createWell(scene) {
-    // create the well geometry, it's centered around [0, 0, 0]
-    const geo = new THREE.BoxGeometry(WELL_SIZE, WELL_SIZE, WELL_DEPTH);
-
-    const wire = new THREE.EdgesGeometry(geo);
-    const well = new THREE.LineSegments(wire, new THREE.LineBasicMaterial({ color: 0x00ffff }));
-
-    well.position.z = -WELL_DEPTH / 2;
-    scene.add(well);
-
-    // create the 3d array that will represent the well
-    return Array.from({ length: WELL_DEPTH }, () =>
-      Array.from({ length: WELL_SIZE }, () =>
-        Array.from({ length: WELL_SIZE }, () => 0)
-      )
-    );
+export function createWellGrid() {
+    const grid = [];
+    for (let x=0; x<WELL_SIZE; x++) {
+        grid[x] = [];
+        for (let y=0; y<WELL_SIZE; y++) {
+            grid[x][y] = [];
+            for (let z=0; z<WELL_DEPTH; z++) {
+                grid[x][y][z] = null; // empty
+            }
+        }
+    }
+    return grid;
 }
-
-

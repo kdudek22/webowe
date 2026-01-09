@@ -1,28 +1,21 @@
 import { createScene } from "./game/scene.js";
-import {createWell, WELL_DEPTH, WELL_SIZE} from "./game/well.js";
-import { createPiece } from "./game/pieces.js";
+import { WELL_SIZE, WELL_DEPTH, createWellGrid } from "./game/well.js";
+import { spawnPiece } from "./game/pieces.js";
 import { setupControls } from "./game/controls.js";
-import { animateLoop } from "./game/animation.js";
+import { animateLoop } from "./game/animate.js";
 
-const { scene, camera, renderer } = createScene();
-const well = createWell(scene);
+const { scene, camera, renderer, controls } = createScene();
 
 const state = {
+    grid: createWellGrid(),
+    well: { width: WELL_SIZE, height: WELL_SIZE, depth: WELL_DEPTH },
     activePiece: null,
     fixed: [],
-    fallInterval: 500,
-    lastFallTime: 0,
-    well: {
-        well: well,
-        depth: WELL_DEPTH,
-        size: WELL_SIZE
-    },
-    spawn() {
-        this.activePiece = createPiece(scene);
-        return this.activePiece;
-    }
+    fallInterval: 600,
+    lastFallTime: 0
 };
 
-state.spawn();
+state.activePiece = spawnPiece(state.grid);
+
 setupControls(state);
-animateLoop(state, renderer, scene, camera);
+animateLoop(state, renderer, scene, camera, controls);
