@@ -9,8 +9,8 @@ class Piece1{
           [0, 1, 1]
         ]
         this.position = {
-            x: 3,
-            y: 3,
+            x: 2,
+            y: 2,
             z: 0
         }
     }

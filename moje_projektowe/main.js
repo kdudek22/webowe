@@ -1,6 +1,7 @@
 import { renderState, renderer, scene, camera, controls } from "./game/renderer.js";
 import { spawnPiece } from "./game/pieces.js";
 import {fixPiece, tryMove} from "./game/logic.js";
+import {setupInput} from "./game/input.js";
 // import { setupInput } from "./game/input.js";
 
 
@@ -29,6 +30,8 @@ import {fixPiece, tryMove} from "./game/logic.js";
 const AUTO_MOVE_INTERVAL = 500
 let timer = 0
 let activePiece = spawnPiece()
+
+setupInput(() => activePiece);
 
 function animate(time){
   requestAnimationFrame(animate)

@@ -63,30 +63,40 @@ cornerPositions.forEach(pos => {
 
 
 
-
 /* cubes */
 const cubeGeo = new THREE.BoxGeometry(1, 1, 1);
 const cubeMat = new THREE.MeshStandardMaterial({ color: 0xff4444 });
 
 let meshes = [];
 
+
 export function renderState(activePiece) {
   meshes.forEach(m => scene.remove(m));
   meshes = [];
 
-  for (let z = 0; z < WELL_DEPTH; z++)
-    for (let y = 0; y < WELL_HEIGHT; y++)
-      for (let x = 0; x < WELL_WIDTH; x++)
-        if (state[z][y][x]) {
-          const c = new THREE.Mesh(cubeGeo, cubeMat);
-          c.position.set(
-            x - 0.5,
-            y - 0.5,
-            z + 0.5, // here we add 0.5 for indexing :)
-          );
-          scene.add(c);
-          meshes.push(c);
+  for (let z = 0; z < WELL_DEPTH; z++) {
+      // normalize depth 0 → 1
+      const color = getColorBasedOnDepth(z)
+
+      const cubeMat = new THREE.MeshStandardMaterial({color});
+
+      for (let y = 0; y < WELL_HEIGHT; y++){
+        for (let x = 0; x < WELL_WIDTH; x++){
+          if (state[z][y][x]) {
+            const c = new THREE.Mesh(cubeGeo, cubeMat);
+            c.position.set(
+              x + 0.5,
+              y + 0.5,
+              z + 0.5
+            );
+            scene.add(c);
+            meshes.push(c);
+          }
         }
+
+      }
+
+  }
 
   if (activePiece) {
       for(let i= -1; i<2; i++){
@@ -94,8 +104,8 @@ export function renderState(activePiece) {
               if(activePiece.blocks[j + 1][i + 1]){
                   const c = new THREE.Mesh(cubeGeo, cubeMat);
                   c.position.set(
-                    activePiece.position.x + i - 0.5,
-                    activePiece.position.y + j - 0.5,
+                    activePiece.position.x + i + 0.5,
+                    activePiece.position.y + j + 0.5,
                     activePiece.position.z - 0.5
                   )
                   scene.add(c)
@@ -104,4 +114,11 @@ export function renderState(activePiece) {
           }
       }
   }
+}
+
+
+const getColorBasedOnDepth = (depth) => {
+  const color = new THREE.Color();
+  color.setHSL(0.66 * (1 - (depth / (WELL_DEPTH - 1))), 1.0, 0.5);
+  return color
 }
