@@ -1,11 +1,8 @@
-import {  renderer, scene, camera, controls } from "./game/renderer.js";
-// import { spawnPiece, tryMove, fixPiece } from "./game/logic.js";
+import { renderState, renderer, scene, camera, controls } from "./game/renderer.js";
+import { spawnPiece } from "./game/pieces.js";
+import {fixPiece, tryMove} from "./game/logic.js";
 // import { setupInput } from "./game/input.js";
 
-// let activePiece = spawnPiece();
-
-let moveTimer = 0;
-const GRAVITY_INTERVAL = 500; // ms per step
 
 // setupInput(() => activePiece);
 
@@ -29,5 +26,39 @@ const GRAVITY_INTERVAL = 500; // ms per step
 
 // }
 
+const AUTO_MOVE_INTERVAL = 500
+let timer = 0
+let activePiece = spawnPiece()
+
+function animate(time){
+  requestAnimationFrame(animate)
+
+  // this adds the delta time between frames
+  timer += time ? time - (animate.lastTime || time) : 0
+  animate.lastTime = time
+
+  if(!activePiece){
+    return
+  }
+
+  if(timer >= AUTO_MOVE_INTERVAL ){
+    timer = 0
+
+    if(!tryMove(activePiece, 0, 0, 1)){
+      fixPiece(activePiece)
+      console.log("spawning new piece")
+      activePiece = spawnPiece()
+
+    }
+
+    // activePiece.position.z -= 1
+
+  }
+
+  renderState(activePiece)
   renderer.render(scene, camera);
-// animate();
+  // controls.update()
+}
+
+
+animate();

@@ -1,5 +1,5 @@
-export const WELL_WIDTH = 6;
-export const WELL_HEIGHT = 6;
+export const WELL_WIDTH = 5;
+export const WELL_HEIGHT = 5;
 export const WELL_DEPTH = 10;
 
 
