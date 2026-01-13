@@ -12,14 +12,39 @@
         text-align: center;
         z-index: 1;
     }
+    #play {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        text-align: center;
+        z-index: 1;
+    }
+    #gameLost{
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        text-align: center;
+        z-index: 1;
+        display: none;
+    }
 </style>
 </head>
 <body>
-
-<div id="info">
-Mysz – obrót kamery | Scroll – zoom<br>
-⬅️ ➡️ ⬆️ ⬇️ ruch | A/D rotacja | Spacja – drop
-</div>
+    <div id="info">
+        <p>Mysz – obrót kamery | Scroll – zoom</p>
+        <p>Strzałki - poruszanie</p>
+        <p>A/D - rotacja</p>
+    </div>
+    <div id="play">
+        <h1>Rozpocznij Grę</h1>
+    </div>
+    <div id="gameLost">
+        <h1>Przegrałeś :(</h1>
+        <p>Kliknij aby zagrać ponownie</p>
+    </div>
+    <div id="score">
+        <p></p>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/three@0.145/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.145/examples/js/controls/OrbitControls.js"></script>
     <script type="module" src="main.js"></script>
